@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use App\Models\Student;
 
 class StudentController extends Controller
 {
@@ -12,23 +13,11 @@ class StudentController extends Controller
      */
     public function index()
     {
-        // $data=[
-        //     [
-        //         'id'=>'1',
-        //         'name'=>'David',
-        //     ],
-        //     [
-        //         'id'=>'2',
-        //         'name'=>'John',
-        //     ],
-        //     [
-        //         'id'=>'3',
-        //         'name'=>'Mary',
-        //     ],
-        // ];
+        $data=Student::all();
+
         // $data = DB::select('select * from students');
         // get() 會回傳 collection
-        $data = DB::table('students')->get();
+        // $data = DB::table('students')->get();
         // first() 會回傳單一物件
         // $data = DB::table('students')->where('id', 2)->get();
 
@@ -42,7 +31,8 @@ class StudentController extends Controller
      */
     public function create()
     {
-        dd('create method called');
+        // dd('create method called');
+        return view('student.create');
     }
 
     /**
@@ -51,6 +41,13 @@ class StudentController extends Controller
     public function store(Request $request)
     {
         //
+        $input=$request->except('_token');
+        // dd($input);
+        $data=new Student;
+        $data->name=$input['name'];
+        $data->save();
+
+        return redirect()->route('students.index');
     }
 
     /**
@@ -141,6 +138,12 @@ class StudentController extends Controller
         public function html(){
         // dd('html method called');
         return view('student.html');
+
+    }
+
+    public function gaga(){
+        // dd('child method called');
+        return view('try.gaga');
 
     }
 }

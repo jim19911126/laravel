@@ -9,12 +9,13 @@ use App\Http\Controllers\StudentController;
 
 Route::get('/students_excel', [StudentController::class, 'excel']);
 Route::get('/students_test', [StudentController::class, 'test']);
-Route::get('/students_child', [StudentController::class, 'child']);
 
-Route::get('/students_html', [StudentController::class, 'html'])->name('student.html');
-Route::get('/students_js', [StudentController::class, 'js'])->name('student.js');
-Route::get('/students_php', [StudentController::class, 'php'])->name('student.php');
-Route::get('/students_python', [StudentController::class, 'python'])->name('student.python');
+Route::get('/trys_gaga', [StudentController::class, 'gaga']);
+
+Route::get('/pages_html', [StudentController::class, 'html'])->name('pages.html');
+Route::get('/pages_js', [StudentController::class, 'js'])->name('pages.js');
+Route::get('/pages_php', [StudentController::class, 'php'])->name('pages.php');
+Route::get('/pages_python', [StudentController::class, 'python'])->name('pages.python');
 
 
 Route::resource('students', StudentController::class);

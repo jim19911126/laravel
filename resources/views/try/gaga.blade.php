@@ -1,4 +1,4 @@
-@extends('layouts.app')
+@extends('layouts.gaga')
  
 @section('title', 'LADY GAGA')
 

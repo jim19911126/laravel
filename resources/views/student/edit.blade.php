@@ -11,7 +11,15 @@
 
 <body>
     <div class="container mt-3">
-        <h2>Edit Student {{$id}}</h2>
+        <h2>編輯學生 {{$id}}</h2>
+        <form action="{{route('students.update', $id)}}" method="POST">
+            @csrf
+            @method('PUT')
+            <div class="mb-3 mt-3">
+                <label for="name">姓名</label>
+                <input type="text" class="form-control" id="name" placeholder="Enter name" name="name">
+            </div>
+            <button type="submit" class="btn btn-primary">Submit</button>
     </div>
 </body>
 
