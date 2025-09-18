@@ -6,7 +6,10 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Models\Student;
 use App\Models\Phone;
+use App\Models\Hobby;
 use NunoMaduro\Collision\Adapters\Phpunit\Style;
+use App\Exports\StudentsExport;
+use Maatwebsite\Excel\Facades\Excel;
 
 class StudentController extends Controller
 {
@@ -16,7 +19,7 @@ class StudentController extends Controller
     public function index()
     {
         $data=Student::with('phoneRelation','hobbiesRelation')->get();
-        $studentHobbies = $data[0]->hobbiesRelation;
+        // $studentHobbies = $data[0]->hobbiesRelation;
         // dd($studentHobbies);
 
         // $data = DB::select('select * from students');
@@ -27,7 +30,20 @@ class StudentController extends Controller
 
         // dd($data);
 
+        foreach($data as $key=>$value){
+            $dataHobbies = $value->hobbiesRelation;
+            // $hobbyString = '';
+            $hobbyArr = [];
+            foreach($dataHobbies as $k=>$v){
+                array_push($hobbyArr, $v->hobby_name);
+            };
+
+            $hobbyString = join(',', $hobbyArr);
+            $data[$key]['hobbyString'] = $hobbyString;
+        
+        }
         return view('student.index', ['data' => $data]);
+ 
     }
 
     /**
@@ -59,6 +75,14 @@ class StudentController extends Controller
         $dataPhone->phone_number=$input['phone'];
         $dataPhone->save();
 
+        // hobby子表
+        $hobbyArr = explode(',', $input['hobbies']);
+        foreach($hobbyArr as $k=>$v){
+            $dataHobby=new Hobby;        
+            $dataHobby->student_id=$data->id;
+            $dataHobby->hobby_name=$v;
+            $dataHobby->save();
+        }
         return redirect()->route('students.index');
     }
 
@@ -75,7 +99,17 @@ class StudentController extends Controller
      */
     public function edit(string $id)
     {
-        $data=Student::with('phoneRelation')->find($id);
+        $data=Student::with('phoneRelation','hobbiesRelation')->find($id);
+
+        $dataHobbies = $data->hobbiesRelation;
+        // $hobbyString = '';
+        $hobbyArr = [];
+        foreach($dataHobbies as $k=>$v){
+            array_push($hobbyArr, $v->hobby_name);
+        }
+
+        $hobbyString = join(',', $hobbyArr);
+        $data['hobbyString'] = $hobbyString;
         // dd('edit method called');
         return view('student.edit', ['data' => $data]);
     }
@@ -102,6 +136,18 @@ class StudentController extends Controller
         $dataPhone->phone_number=$input['phone'];
         $dataPhone->save();
 
+        // 刪除舊的興趣子表資料
+        Hobby::where('student_id', $data->id)->delete();
+
+        // 新增興趣子表資料
+        $hobbyArr = explode(',', $input['hobbies']);
+        foreach($hobbyArr as $k=>$v){
+            $dataHobby=new Hobby;        
+            $dataHobby->student_id=$data->id;
+            $dataHobby->hobby_name=$v;
+            $dataHobby->save();
+        }
+        
         return redirect()->route('students.index');
     }
 
@@ -116,6 +162,9 @@ class StudentController extends Controller
         // 刪除主表資料
         Student::where('id', $id)->delete();
 
+        // 刪除舊的興趣子表資料
+        Hobby::where('student_id', $id)->delete();
+
         // 回到主畫面
         return redirect()->route('students.index');
         // dd('destroy method called');
@@ -123,8 +172,7 @@ class StudentController extends Controller
 
     public function excel()
     {
-        dd('excel method called');
-        // return view('student.excel');
+        return Excel::download(new StudentsExport, 'students.xlsx');
     }
 
     public function test()

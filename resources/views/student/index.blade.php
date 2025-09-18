@@ -16,7 +16,7 @@
     <p>這個表格顯示所有學生的姓名</p>
     <div>
       <a href="{{ route('students.create') }}" class="btn btn-primary">新增學生</a>
-      <a href="{{ route('students.create') }}" class="btn btn-secondary">匯出</a>
+      <a href="{{ route('students.excel') }}" class="btn btn-secondary">匯出</a>
     </div>
     <br>
     <table class="table table-bordered" style="text-align:center">
@@ -37,11 +37,12 @@
             <td>{{ $value->id }}</td>
             <td>{{ $value->name }}</td>
             <td>{{ $value->phoneRelation->phone_number ?? '' }}</td>
-            <td>
+            <td>{{ $value->hobbyString ?? '' }}</td>
+            {{-- <td>
               @foreach ($value->hobbiesRelation as $hobby)
                 <span class="badge bg-secondary">{{ $hobby->hobby_name }}</span>
               @endforeach
-            </td>
+            </td> --}}
 
             <th>
               <a href="{{ route('students.edit', ['student' => $value->id]) }}" class="btn btn-warning">編輯</a>

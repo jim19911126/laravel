@@ -17,16 +17,20 @@
             @method('PUT')
             <div class="mb-3 mt-3">
                 <label for="name">姓名</label>
-                <input type="text" class="form-control" id="name" placeholder="Enter name" name="name"
+                <input type="text" class="form-control" id="name" name="name"
                     value="{{$data->name}}">
             </div>
-
-                <div class="mb-3 mt-3">
-                    <label for="phone">電話</label>
-                    <input type="text" class="form-control" id="phone" placeholder="Enter phone" name="phone"
-                        value="{{$data->phoneRelation->phone_number ?? ''}}">
-                </div>
-                <button type="submit" class="btn btn-primary">送出</button>
+            <div class="mb-3 mt-3">
+                <label for="phone">電話</label>
+                <input type="text" class="form-control" id="phone" name="phone"
+                    value="{{$data->phoneRelation->phone_number ?? ''}}">
+            </div>
+            <div class="mb-3 mt-3">
+                <label for="hobbies">興趣</label>
+                <input type="text" class="form-control" id="hobbies" name="hobbies"
+                    value="{{$data->hobbyString ?? ''}}">
+            </div>
+            <button type="submit" class="btn btn-primary">送出</button>
     </div>
 </body>
 

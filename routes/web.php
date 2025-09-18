@@ -7,7 +7,7 @@ use App\Http\Controllers\StudentController;
 // students/{id}   # 表示特定一位學生
 // 加上s是因為 laravel 的慣例是用複數形式來表示[資源集合]
 
-Route::get('/students_excel', [StudentController::class, 'excel']);
+Route::get('/students_excel', [StudentController::class, 'excel'])->name('students.excel');
 Route::get('/students_test', [StudentController::class, 'test']);
 
 Route::get('/trys_gaga', [StudentController::class, 'gaga']);
