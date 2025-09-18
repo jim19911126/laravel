@@ -11,15 +11,22 @@
 
 <body>
     <div class="container mt-3">
-        <h2>編輯學生 {{$id}}</h2>
-        <form action="{{route('students.update', $id)}}" method="POST">
+        <h2>編輯學生 {{$data->id}}</h2>
+        <form action="{{route('students.update', ['student' => $data['id']])}}" method="POST">
             @csrf
             @method('PUT')
             <div class="mb-3 mt-3">
                 <label for="name">姓名</label>
-                <input type="text" class="form-control" id="name" placeholder="Enter name" name="name">
+                <input type="text" class="form-control" id="name" placeholder="Enter name" name="name"
+                    value="{{$data->name}}">
             </div>
-            <button type="submit" class="btn btn-primary">Submit</button>
+            <form action="{{route('students.update', ['phone' => $data['id']])}}" method="POST">
+                <div class="mb-3 mt-3">
+                    <label for="phone">電話</label>
+                    <input type="text" class="form-control" id="phone" placeholder="Enter phone" name="phone"
+                        value="{{$data->phoneRelation->phone_number ?? ''}}">
+                </div>
+                <button type="submit" class="btn btn-primary">送出</button>
     </div>
 </body>
 

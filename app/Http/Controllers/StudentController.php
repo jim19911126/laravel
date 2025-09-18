@@ -13,7 +13,7 @@ class StudentController extends Controller
      */
     public function index()
     {
-        $data=Student::all();
+        $data=Student::with('phoneRelation')->get();
 
         // $data = DB::select('select * from students');
         // get() 會回傳 collection
@@ -63,8 +63,9 @@ class StudentController extends Controller
      */
     public function edit(string $id)
     {
+        $data=Student::find($id);
         // dd('edit method called');
-        return view('student.edit', ['id' => $id]);
+        return view('student.edit', ['data' => $data]);
     }
 
     /**
@@ -73,6 +74,12 @@ class StudentController extends Controller
     public function update(Request $request, string $id)
     {
         //
+        $input=$request->except(['_token']);
+        $data=Student::find($id);
+        $data->name=$input['name'];
+        $data->save();
+
+        return redirect()->route('students.index');
     }
 
     /**
@@ -80,7 +87,10 @@ class StudentController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        $data=Student::find($id);
+        $data->delete();
+        return redirect()->route('students.index');
+        // dd('destroy method called');
     }
 
     public function excel()
