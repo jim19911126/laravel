@@ -23,8 +23,9 @@
       <thead>
         <tr>
           <th width=10%>編號</th>
-          <th width=30%>姓名</th>
-          <th width=40%>電話</th>
+          <th width=20%>姓名</th>
+          <th width=20%>電話</th>
+          <th width=30%>興趣</th>
           <th width=20%>操作</th>
         </tr>
       </thead>
@@ -36,6 +37,12 @@
             <td>{{ $value->id }}</td>
             <td>{{ $value->name }}</td>
             <td>{{ $value->phoneRelation->phone_number ?? '' }}</td>
+            <td>
+              @foreach ($value->hobbiesRelation as $hobby)
+                <span class="badge bg-secondary">{{ $hobby->hobby_name }}</span>
+              @endforeach
+            </td>
+
             <th>
               <a href="{{ route('students.edit', ['student' => $value->id]) }}" class="btn btn-warning">編輯</a>
               <form action="{{ route('students.destroy', ['student' => $value->id]) }}" method="POST" style="display:inline;">

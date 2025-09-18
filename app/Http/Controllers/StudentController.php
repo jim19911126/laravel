@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Models\Student;
+use App\Models\Phone;
+use NunoMaduro\Collision\Adapters\Phpunit\Style;
 
 class StudentController extends Controller
 {
@@ -13,7 +15,9 @@ class StudentController extends Controller
      */
     public function index()
     {
-        $data=Student::with('phoneRelation')->get();
+        $data=Student::with('phoneRelation','hobbiesRelation')->get();
+        $studentHobbies = $data[0]->hobbiesRelation;
+        // dd($studentHobbies);
 
         // $data = DB::select('select * from students');
         // get() 會回傳 collection
@@ -43,9 +47,17 @@ class StudentController extends Controller
         //
         $input=$request->except('_token');
         // dd($input);
+
+        // 主表
         $data=new Student;
         $data->name=$input['name'];
         $data->save();
+
+        // 子表
+        $dataPhone=new Phone;        
+        $dataPhone->student_id=$data->id;
+        $dataPhone->phone_number=$input['phone'];
+        $dataPhone->save();
 
         return redirect()->route('students.index');
     }
@@ -63,7 +75,7 @@ class StudentController extends Controller
      */
     public function edit(string $id)
     {
-        $data=Student::find($id);
+        $data=Student::with('phoneRelation')->find($id);
         // dd('edit method called');
         return view('student.edit', ['data' => $data]);
     }
@@ -75,9 +87,20 @@ class StudentController extends Controller
     {
         //
         $input=$request->except(['_token']);
+
+        // 抓主表資料
         $data=Student::find($id);
         $data->name=$input['name'];
         $data->save();
+
+        // 刪除舊的子表資料
+        Phone::where('student_id', $data->id)->delete();
+
+        // 新增子表資料
+        $dataPhone=new Phone;        
+        $dataPhone->student_id=$data->id;
+        $dataPhone->phone_number=$input['phone'];
+        $dataPhone->save();
 
         return redirect()->route('students.index');
     }
@@ -87,8 +110,13 @@ class StudentController extends Controller
      */
     public function destroy(string $id)
     {
-        $data=Student::find($id);
-        $data->delete();
+        // 刪除舊的子表資料
+        Phone::where('student_id', $id)->delete();
+
+        // 刪除主表資料
+        Student::where('id', $id)->delete();
+
+        // 回到主畫面
         return redirect()->route('students.index');
         // dd('destroy method called');
     }

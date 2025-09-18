@@ -20,7 +20,7 @@
                 <input type="text" class="form-control" id="name" placeholder="Enter name" name="name"
                     value="{{$data->name}}">
             </div>
-            <form action="{{route('students.update', ['phone' => $data['id']])}}" method="POST">
+
                 <div class="mb-3 mt-3">
                     <label for="phone">電話</label>
                     <input type="text" class="form-control" id="phone" placeholder="Enter phone" name="phone"
